@@ -50,14 +50,17 @@ export async function executeCode(language, code) {
 
     const data = await response.json();
 
+    const run = data.run || {};
+    const compile = data.compile || {};
     const output = data.run.output || "";
-    const stderr = data.run.stderr || "";
+    const stderr = (compile.stderr || run.stderr || "");
+    const exitCode = typeof run.code === "number" ? run.code : 0;
 
-    if (stderr) {
+    if (stderr || exitCode !== 0) {
       return {
         success: false,
         output: output,
-        error: stderr,
+        error: stderr || `Process exited with code ${exitCode}`,
       };
     }
 
