@@ -61,7 +61,7 @@ export async function getActiveSessions(_, res) {
       .sort({ createdAt: -1 })
       .limit(20);
 
-    res.status(200).json({ sessions });
+    res.status(200).json({ sessions: session });
   } catch (error) {
     console.log("Error in getActiveSessions controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -123,7 +123,7 @@ export async function joinSession(req, res) {
     }
 
     // check if session is already full - has a participant
-    if (!session.participant)
+    if (session.participant)
       return res.status(409).json({ message: "Session is full" });
 
     session.participant = userId;
@@ -135,7 +135,7 @@ export async function joinSession(req, res) {
     res.status(200).json({ session });
   } catch (error) {
     console.log("Error in joinSession controller:", error.message);
-    res.status(500).json({ messgae: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
