@@ -116,7 +116,6 @@ Sequence summary:
 - Keep `VITE_API_URL` consistent with backend routes (prefix `/api` if backend is mounted that way).
 - For local development, set `VITE_STREAM_API_KEY` from your Stream dashboard.
 - Consider adding a small Postman / Insomnia collection and a Postman environment to make manual testing of the backend easy.
-- If you want a visual diagram (SVG/PNG), I can generate a Draw.io or mermaid diagram and add it to the README.
 
 ## Connect With Me
 - **LinkedIn:** https://www.linkedin.com/in/devadi 
