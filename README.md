@@ -2,6 +2,10 @@
 
 WeCode is a full-stack web application for practicing coding problems with real-time collaborative sessions. It combines an interactive code editor, runnable test harness, and real-time audio/video chat and messaging so two users can pair-program and solve problems together.
 
+<p align="center">
+    <img src="./FrontEnd/images/Home_ss.png" width="600">
+    </p>
+
 **What it does**
 - Users sign in with Clerk and can create or join live coding sessions.
 - Each session provides a shared coding environment (Monaco editor), code execution via the Piston API, a Stream-powered video call, and a Stream chat channel for messaging.
