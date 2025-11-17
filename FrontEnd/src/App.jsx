@@ -1,17 +1,11 @@
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-  useUser,
-} from "@clerk/clerk-react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage.jsx";
-import ProblemsPage from "./pages/ProblemsPage.jsx";
+import { useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
+import { Navigate, Route, Routes } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
 import ProblemPage from "./pages/ProblemPage.jsx";
+import ProblemsPage from "./pages/ProblemsPage.jsx";
+import SessionPage from "./pages/SessionPage.jsx";
 
 
 function App() {
@@ -37,6 +31,10 @@ function App() {
         <Route
           path="/problem/:id"
           element={isSignedIn ? <ProblemPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/session/:id"
+          element={isSignedIn ? <SessionPage /> : <Navigate to={"/"} />}
         />
       </Routes>
 
