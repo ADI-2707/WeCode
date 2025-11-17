@@ -3,22 +3,28 @@
 This document describes the frontend structure, important files, environment variables, packages and tools used, how the frontend calls the backend APIs, and a flow diagram showing how auth, Stream, and the backend interact.
 
 **How to run (local)**
+
 - Install dependencies:
+
 ```powershell
 cd FrontEnd; npm install
 ```
+
 - Start dev server:
+
 ```powershell
 npm run dev
 ```
 
 **Environment variables** (use `.env` or your Vite env):
+
 - `VITE_API_URL` — base URL for backend API (e.g. `http://localhost:3000/api`)
 - `VITE_STREAM_API_KEY` — Stream API key used to initialize the Stream video client in the browser
 
 Note: Clerk configuration is required (Clerk provider is used in app). Clerk setup typically uses its own provider/wrapping at app root and public keys configured in your environment.
 
 **Top-level pages**
+
 - `src/pages/HomePage.jsx` — public landing page and authentication prompts.
 - `src/pages/DashboardPage.jsx` — signed-in dashboard that lists active and recent sessions and opens the `CreateSessionModal`.
 - `src/pages/ProblemsPage.jsx` — list of practice problems.
@@ -26,6 +32,7 @@ Note: Clerk configuration is required (Clerk provider is used in app). Clerk set
 - `src/pages/SessionPage.jsx` — live collaborative session page (video + chat + shared code).
 
 **Important components and hooks**
+
 - `src/components/Navbar.jsx` — top navigation and user actions.
 - `src/components/CreateSessionModal.jsx` — modal to create a session (calls backend `POST /sessions`).
 - `src/components/ActiveSessions.jsx`, `RecentSessions.jsx` — lists of sessions.
@@ -35,28 +42,33 @@ Note: Clerk configuration is required (Clerk provider is used in app). Clerk set
 - `src/hooks/useStreamClient.js` — manages Stream client initialization and lifecycle on the client.
 
 **Client API helper**
+
 - `src/lib/axios.js` exports an axios instance configured with `baseURL: import.meta.env.VITE_API_URL` and `withCredentials: true`. Use this instance when calling the backend to automatically send cookies used by Clerk sessions.
 
 Example: create session from client (using axios instance):
+
 ```js
-import axios from '../lib/axios'
+import axios from "../lib/axios";
 
 const createSession = async (problem, difficulty) => {
-	const res = await axios.post('/sessions', { problem, difficulty })
-	return res.data
-}
+  const res = await axios.post("/sessions", { problem, difficulty });
+  return res.data;
+};
 ```
 
 Example: get a Stream chat token (frontend should call after auth):
+
 ```js
-const { data } = await axios.get('/chat/token')
+const { data } = await axios.get("/chat/token");
 // data: { token, userId, userName, userImage }
 ```
 
 **Code execution (Piston)**
+
 - The frontend uses `src/lib/piston.js` to call Piston's public API (`https://emkc.org/api/v2/piston/execute`) to run code. It passes language/version/files and normalizes results for the `OutputPanel`.
 
 **Packages & Tools (from `FrontEnd/package.json`)**
+
 - **Core React & routing:** `react`, `react-dom`, `react-router`, `react-router-dom` — app framework and routes
 - **Clerk:** `@clerk/clerk-react` — authentication/identity provider and hooks (`useUser` usage in `App.jsx`)
 - **HTTP:** `axios` — configured `src/lib/axios.js` to call backend (`withCredentials: true` so cookies are sent)
@@ -68,24 +80,49 @@ const { data } = await axios.get('/chat/token')
 - **Other:** `react-hot-toast` for notifications; `react-resizable-panels` for resizable editor/output panels
 
 **App entry and routing**
+
 - `src/App.jsx` wraps routes and uses `useUser()` from Clerk. It redirects based on sign-in status and mounts these routes:
-	- `/` Home
-	- `/dashboard` Dashboard
-	- `/problems` Problems list
-	- `/problem/:id` Problem page
-	- `/session/:id` Session page
+ - `/` Home
+    <p align="center">
+    <img src="./images/Home_ss.png" width="600">
+    </p>
+    <p align="center">
+    <img src="./images/Home_ft1.png" width="200"> 
+    <img src="./images/Home_ft2.png" width="200"> 
+    <img src="./images/Home_ft3.png" width="200"> 
+    </p>
+ - `/dashboard` Dashboard
+    <p align="center">
+    <img src="./images/Get_started.png" width="300">
+    <img src="./images/Dashboard.png" width="300">
+    </p>
+ - `/problems` Problems list
+    <p align="center">
+    <img src="./images/Problems.png" width="600">
+    </p>
+ - `/problem/:id` Problem page
+    <p align="center">
+    <img src="./images/Problempage.png" width="600">
+    </p>
+ - `/session/:id` Session page
+    <p align="center">
+    <img src="./images/Create_session.png" width="300">
+    <img src="./images/InterviewSession.png" width="300">
+    </p>
 
 **Frontend → Backend interactions**
+
 - Authentication: front-end relies on Clerk for sign-in. After authentication, requests to the backend send credentials (cookies) because `axios` is configured with `withCredentials: true`.
 - Creating / managing sessions: frontend uses endpoint group `/sessions` (see backend README). Examples:
-	- `POST /sessions` — create a session (body: `{ problem, difficulty }`)
-	- `POST /sessions/:id/join` — join a session
-	- `POST /sessions/:id/end` — end session (host only)
-	- `GET /sessions/active` — get active sessions
-	- `GET /sessions/my-recent` — user-specific recent sessions
+  - `POST /sessions` — create a session (body: `{ problem, difficulty }`)
+  - `POST /sessions/:id/join` — join a session
+  - `POST /sessions/:id/end` — end session (host only)
+  - `GET /sessions/active` — get active sessions
+  - `GET /sessions/my-recent` — user-specific recent sessions
 - Chat tokens: frontend calls `GET /chat/token` to receive Stream chat token and user info, then calls `initializeStreamClient(user, token)` (see `src/lib/stream.js`) to create the Stream video client.
 
 **Frontend flow diagram (ASCII)**
+
 ```
 Browser / Frontend
 	|  (1) Clerk sign-in (hosted or widget) -> browser stores Clerk session cookie
@@ -107,16 +144,20 @@ Stream Video & Chat (3rd party)
 ```
 
 Sequence summary:
-1) User signs in with Clerk in browser.
-2) Frontend uses `axios` (with credentials) to call protected backend endpoints.
-3) Backend validates request and responds with session data or chat token.
-4) If a Stream token is returned, frontend initializes the Stream video client and chat UI with the returned token/user info.
+
+1. User signs in with Clerk in browser.
+2. Frontend uses `axios` (with credentials) to call protected backend endpoints.
+3. Backend validates request and responds with session data or chat token.
+4. If a Stream token is returned, frontend initializes the Stream video client and chat UI with the returned token/user info.
 
 **Developer notes & suggestions**
+
 - Keep `VITE_API_URL` consistent with backend routes (prefix `/api` if backend is mounted that way).
+- Lookout for `VITE_API_URL` in development and production.
 - For local development, set `VITE_STREAM_API_KEY` from your Stream dashboard.
 - Consider adding a small Postman / Insomnia collection and a Postman environment to make manual testing of the backend easy.
 
 ## Connect With Me
-- **LinkedIn:** https://www.linkedin.com/in/devadi 
+
+- **LinkedIn:** https://www.linkedin.com/in/devadi
 - **GitHub:** https://github.com/ADI-2707
