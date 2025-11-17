@@ -154,3 +154,7 @@ Sequence summary:
 - Ensure `DB_URL` is present or the server will exit (see `src/lib/db.js`).
 - `protectRoute` implementation relies on `@clerk/express` and the app having Clerk properly configured (Clerk middleware and environment as per Clerk docs).
 - Inngest functions call `connectDB()` before DB operations; verify DB network accessibility for event handlers.
+
+## Connect With Me
+- **LinkedIn:** https://www.linkedin.com/in/devadi 
+- **GitHub:** https://github.com/ADI-2707

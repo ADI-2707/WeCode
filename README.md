@@ -50,3 +50,7 @@ Open the browser at the URL shown by Vite (usually `http://localhost:5173`) and 
 **Where to look next**
 - Backend API documentation and environment variables: `BackEnd/README.md`
 - Frontend usage, component list and env variables: `FrontEnd/README.md`
+
+## Connect With Me
+- **LinkedIn:** https://www.linkedin.com/in/devadi 
+- **GitHub:** https://github.com/ADI-2707
